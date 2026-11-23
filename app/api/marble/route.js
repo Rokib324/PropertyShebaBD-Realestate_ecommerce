@@ -1,3 +1,4 @@
+import { join } from "path";
 import connectDB from "@/lib/config/db"
 import MarbleModel from "@/lib/models/MarbleModel";
 import { writeFile } from "fs/promises";
@@ -85,7 +86,8 @@ async function POST(request) {
     const image = formData.get('image');
     const imageByteData = await image.arrayBuffer();
     const buffer = Buffer.from(imageByteData);
-    const path = `./uploads/${timestamp}_${image.name}`;
+    const path = join(process.cwd(), "uploads", `${timestamp}_${image.name}`);
+
     await writeFile(path,buffer);
     const imgUrl = `/api/uploads/${timestamp}_${image.name}`;
 

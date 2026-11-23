@@ -32,7 +32,18 @@ function AdminHeader() {
             </span>
           </div>
         )}
-        <Image src={assets.profile_icon} width={40} alt="profile" />
+        {session?.user?.image ? (
+          <Image
+            src={session.user.image}
+            width={40}
+            height={40}
+            alt="profile"
+            className="rounded-full object-cover border-2 border-red-200"
+            unoptimized
+          />
+        ) : (
+          <Image src={assets.profile_icon} width={40} height={40} alt="profile" className="rounded-full" />
+        )}
       </div>
     </div>
   );

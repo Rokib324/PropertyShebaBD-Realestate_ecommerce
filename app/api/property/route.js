@@ -1,3 +1,4 @@
+import { join } from "path";
 import connectDB from "@/lib/config/db"
 import PropertyModel from "@/lib/models/PropertyModel";
 import fs from "fs";
@@ -98,7 +99,8 @@ async function POST(request) {
     const image = formData.get('image');
     const imageByteData = await image.arrayBuffer();
     const buffer = Buffer.from(imageByteData);
-    const path = `./uploads/${timestamp}_${image.name}`;
+    const path = join(process.cwd(), "uploads", `${timestamp}_${image.name}`);
+
     await writeFile(path,buffer);
     const imgUrl = `/api/uploads/${timestamp}_${image.name}`;
 
@@ -133,7 +135,7 @@ async function DELETE(request) {
         if (property && property.image) {
             // Extract filename from /api/uploads/filename format
             const filename = property.image.replace('/api/uploads/', '');
-            fs.unlink(`./uploads/${filename}`,()=>{});
+            fs.unlink(join(process.cwd(), "uploads", filename), () => {});
         }
         await PropertyModel.findByIdAndDelete(propertyId);
         return NextResponse.json({success: true, message: "Property deleted successfully"});

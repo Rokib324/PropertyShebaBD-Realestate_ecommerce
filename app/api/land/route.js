@@ -1,3 +1,4 @@
+import { join } from "path";
 
 import connectDB from "@/lib/config/db"
 import LandModel from "@/lib/models/LandModel";
@@ -92,7 +93,8 @@ async function POST(request) {
             if (image && image.size > 0) {
                 const imageByteData = await image.arrayBuffer();
                 const buffer = Buffer.from(imageByteData);
-                const path = `./uploads/${timestamp}_${i}_${image.name}`;
+                const path = join(process.cwd(), "uploads", `${timestamp}_${i}_${image.name}`);
+
                 await writeFile(path, buffer);
                 imageUrls.push(`/api/uploads/${timestamp}_${i}_${image.name}`);
             }
@@ -144,7 +146,7 @@ async function DELETE(request) {
             // Delete all images associated with this land
             land.images.forEach(imageUrl => {
                 const filename = imageUrl.replace('/api/uploads/', '');
-                fs.unlink(`./uploads/${filename}`,()=>{});
+                fs.unlink(join(process.cwd(), "uploads", filename), () => {});
             });
         }
         await LandModel.findByIdAndDelete(landId);

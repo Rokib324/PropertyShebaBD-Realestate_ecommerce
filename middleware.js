@@ -21,7 +21,7 @@ export async function middleware(request) {
     }
 
     // Revoked or unapproved session → kick out
-    if (!token.isActive || !token.isApproved) {
+    if (token.isActive === false || token.isApproved === false) {
       const response = NextResponse.redirect(
         new URL("/admin/login?error=AccessRevoked", request.url)
       );
@@ -97,7 +97,7 @@ export async function middleware(request) {
   ) {
     const token = await getAdminToken();
 
-    if (!token || !token.isApproved || !token.isActive) {
+    if (!token || token.isActive === false || token.isApproved === false) {
       return NextResponse.json(
         { success: false, message: "Unauthorized. Admin access required." },
         { status: 401 }

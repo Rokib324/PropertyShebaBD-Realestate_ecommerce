@@ -1,21 +1,22 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Turbopack is enabled by default in Next.js 16
-  // Add empty turbopack config to silence warnings
-  turbopack: {},
-  
   // Production optimizations
   reactStrictMode: true,
-  
-  // Ensure proper image optimization
+
+  // Image configuration
   images: {
-    // Disable optimization for API-served images to avoid issues
-    // API routes serve images directly, so optimization would fail
+    // Keep unoptimized true for API-served local uploads (./uploads/*)
+    // Google profile images are served via remotePatterns below
     unoptimized: true,
-    domains: [],
-    remotePatterns: [],
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "lh3.googleusercontent.com",
+        pathname: "/**",
+      },
+    ],
   },
-  
+
   // Disable source maps in production for security
   productionBrowserSourceMaps: false,
 };
